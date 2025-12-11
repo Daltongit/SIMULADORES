@@ -8,27 +8,35 @@ const { jsPDF } = window.jspdf;
 document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('reporte-container');
     const spinner = document.getElementById('loading-spinner');
-
-    // Filtros
+    
     const fCiudad = document.getElementById('filtro-ciudad');
     const fMateria = document.getElementById('filtro-materia');
     const fNombre = document.getElementById('filtro-nombre');
 
     try {
-        const { data: intentos } = await supabase.from('resultados').select('*');
-        const { data: usuariosLocal } = await fetch('DATA/usuarios.json').then(r => r.json());
+        // Consulta segura
+        const { data: intentos, error } = await supabase.from('resultados').select('*');
+        if(error) throw error;
 
+        const { data: usuariosLocal } = await fetch('DATA/usuarios.json').then(r => r.json());
+        
         // Poblar filtro materias
-        const materiasUnicas = [...new Set(intentos.map(i => i.materia))].sort();
-        materiasUnicas.forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = opt.textContent = m;
-            fMateria.appendChild(opt);
-        });
+        if(intentos) {
+            const materiasUnicas = [...new Set(intentos.map(i => i.materia))].sort();
+            materiasUnicas.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = opt.textContent = m;
+                fMateria.appendChild(opt);
+            });
+        }
 
         const render = () => {
             container.innerHTML = '';
-            // Combinar datos
+            if(!intentos || intentos.length === 0) {
+                container.innerHTML = '<p style="text-align:center">No hay resultados en la base de datos.</p>';
+                return;
+            }
+
             const usuariosFiltrados = usuariosLocal.filter(u => u.rol === 'aspirante').filter(u => {
                 const matchCiudad = fCiudad.value === 'Todas' || u.ciudad === fCiudad.value;
                 const matchNombre = u.nombre.toLowerCase().includes(fNombre.value.toLowerCase());
@@ -36,8 +44,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             usuariosFiltrados.forEach(user => {
-                const userIntentos = intentos.filter(i =>
-                    i.usuario_id === user.usuario &&
+                const userIntentos = intentos.filter(i => 
+                    i.usuario_id === user.usuario && 
                     (fMateria.value === 'Todas' || i.materia === fMateria.value)
                 );
 
@@ -70,14 +78,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
-        // Listeners
         fCiudad.onchange = render;
         fMateria.onchange = render;
         fNombre.oninput = render;
-        render(); // Initial render
+        render(); 
         spinner.style.display = 'none';
 
     } catch (e) {
-        container.innerHTML = `<p style="color:red">Error: ${e.message}</p>`;
+        spinner.style.display = 'none';
+        container.innerHTML = `<div class="error-box">Error al conectar con la base de datos: ${e.message}</div>`;
     }
 });
