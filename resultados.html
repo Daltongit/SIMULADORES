@@ -1,58 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Resultados Admin</title>
+    <title>Admin - Sparta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CSS/style-main.css">
     <link rel="stylesheet" href="CSS/style-resultados.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="JS/auth.js"></script>
     <script>checkAuth();</script>
 </head>
-
 <body>
     <header>
         <a href="index.html" class="logo-container">
             <img src="logo.png" class="logo-img">
-            <div class="logo-text">
-                <h1>SPARTA</h1><span>ADMIN</span>
-            </div>
+            <div class="logo-text"><h1>SPARTA</h1><span>ADMIN</span></div>
         </a>
         <div class="user-menu">
             <button class="btn btn-outline" onclick="logout()">Cerrar Sesión</button>
         </div>
     </header>
+
     <main style="max-width:1200px; margin:40px auto; padding:20px;">
-        <h2 style="font-family:'Teko'; font-size:2.5rem; margin-bottom:20px;">Reporte de Intentos</h2>
+        <h2 style="font-family:'Teko'; font-size:3rem; margin-bottom:20px; color:#333;">Reporte de Intentos</h2>
+        
         <div class="filtros-container">
             <div class="filtro-grupo">
                 <label>Ciudad:</label>
-                <select id="filtro-ciudad">
-                    <option>Todas</option>
-                    <option>Tulcán</option>
-                    <option>Ibarra</option>
-                </select>
+                <select id="filtro-ciudad"><option>Todas</option><option>Tulcán</option><option>Ibarra</option></select>
             </div>
             <div class="filtro-grupo">
                 <label>Materia:</label>
-                <select id="filtro-materia">
-                    <option>Todas</option>
-                </select>
+                <select id="filtro-materia"><option>Todas</option></select>
             </div>
             <div class="filtro-grupo">
                 <label>Nombre:</label>
                 <input type="text" id="filtro-nombre" placeholder="Buscar...">
             </div>
-            <button id="descargar-general-csv-btn" class="btn btn-primary">CSV General</button>
+            <button id="descargar-general-csv-btn" class="btn btn-primary" style="background:#27ae60;">CSV General</button>
             <button id="descargar-pdf-btn" class="btn btn-primary">PDF General</button>
         </div>
+
         <div id="loading-spinner" class="spinner"></div>
         <div id="reporte-container"></div>
     </main>
+
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-database modal-icon"></i>
+            <h3 class="modal-title">Error de Conexión</h3>
+            <p id="error-text" class="modal-msg">No se pudo conectar a la base de datos.</p>
+            <button class="btn btn-close-modal" onclick="document.getElementById('error-modal').style.display='none'">Cerrar</button>
+        </div>
+    </div>
+
     <script src="JS/script-resultados.js" type="module"></script>
 </body>
-
 </html>
