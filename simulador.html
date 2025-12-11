@@ -1,63 +1,83 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Simulador</title>
+    <title>Simulador - Sparta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CSS/style-main.css">
     <link rel="stylesheet" href="CSS/style-simulador.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="JS/auth.js"></script>
     <script>checkAuth();</script>
 </head>
-
 <body>
     <header>
         <a href="index.html" class="logo-container">
-            <img src="logo.png" class="logo-img">
-            <div class="logo-text">
-                <h1>SPARTA</h1><span id="header-title">SIMULADOR</span>
-            </div>
+            <img src="logo.png" class="logo-img" alt="Logo">
+            <div class="logo-text"><h1>SPARTA</h1><span id="header-title">SIMULADOR</span></div>
         </a>
     </header>
+
     <main>
         <div id="lobby" class="container-box">
-            <h2 id="lobby-title">Cargando...</h2>
-            <div id="instructions" class="instructions"></div>
-            <p><strong>Preguntas:</strong> <span id="total-questions">...</span> | <strong>Tiempo:</strong> <span
-                    id="time-limit">...</span> min</p>
-            <button id="btn-start" class="btn btn-primary" style="width:100%; margin-top:20px;"
-                disabled>Cargando...</button>
+            <h2 id="lobby-title" style="text-align:center; font-family:'Teko'; font-size:3rem; color:#b22222; margin-bottom:10px;">Cargando...</h2>
+            
+            <div id="instructions" style="background:#fff8e1; padding:20px; border-left:5px solid #f39c12; margin:20px 0; font-size:1.1rem; border-radius:4px;">
+                <p><strong>Cargando instrucciones...</strong></p>
+            </div>
+
+            <div style="display:flex; justify-content:space-around; margin:30px 0; font-size:1.3rem; font-weight:bold; color:#444;">
+                <div><i class="fas fa-list-ol" style="color:#b22222;"></i> <span id="total-questions">...</span> Pregs.</div>
+                <div><i class="fas fa-clock" style="color:#b22222;"></i> <span id="time-limit">...</span> Min.</div>
+            </div>
+            
+            <button id="btn-start" class="btn btn-primary" style="width:100%; padding:15px; font-size:1.4rem;" disabled>
+                <i class="fas fa-spinner fa-spin"></i> Cargando recursos...
+            </button>
         </div>
+
         <div id="quiz" class="quiz-layout" style="display:none;">
             <div class="quiz-main">
                 <div class="question-box">
-                    <span class="q-badge">Pregunta <span id="q-current">1</span></span>
-                    <p id="q-text">...</p>
+                    <span class="q-badge" style="background:#b22222; color:white; padding:5px 10px; border-radius:4px; font-weight:bold;">Pregunta <span id="q-current">1</span></span>
+                    <p id="q-text" style="margin-top:15px; font-size:1.3rem;">...</p>
                     <div id="q-image-container"></div>
                 </div>
                 <div id="options-list"></div>
-                <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                    <button id="btn-prev" class="btn btn-outline"
-                        style="color:#333; border-color:#ccc;">Anterior</button>
+                <div style="display:flex; justify-content:space-between; margin-top:30px;">
+                    <button id="btn-prev" class="btn btn-outline" style="color:#333; border-color:#ccc;">Anterior</button>
                     <button id="btn-next" class="btn btn-primary">Siguiente</button>
                 </div>
             </div>
             <div class="quiz-sidebar">
-                <div class="timer">⏱ <span id="timer">00:00</span></div>
+                <div class="timer"><i class="fas fa-stopwatch"></i> <span id="timer">00:00</span></div>
                 <div id="nav-grid" class="nav-grid"></div>
-                <button id="btn-finish" class="btn btn-primary"
-                    style="width:100%; margin-top:20px; background:#27ae60;">Terminar</button>
+                <button id="btn-finish" class="btn btn-primary" style="width:100%; margin-top:20px; background:#27ae60;">Terminar</button>
             </div>
         </div>
+
         <div id="results" class="container-box" style="display:none; text-align:center;">
-            <h2>Resultados</h2>
-            <div style="font-size:4rem; color:var(--primary); font-family:'Teko';"><span id="final-score">0</span> /
-                1000</div>
-            <p>Correctas: <span id="res-correct">0</span> | Incorrectas: <span id="res-incorrect">0</span></p>
-            <button onclick="location.href='index.html'" class="btn btn-primary" style="margin-top:20px;">Salir</button>
+            <h2 style="font-family:'Teko'; font-size:3rem; margin-bottom:10px;">RESULTADOS</h2>
+            <div style="font-size:5rem; font-family:'Teko'; color:#b22222; line-height:1;">
+                <span id="final-score">0</span> <small style="font-size:2rem; color:#666;">/ 1000</small>
+            </div>
+            <div style="margin:30px 0; font-size:1.3rem;">
+                <span style="color:green; margin-right:20px;"><i class="fas fa-check"></i> <span id="res-correct">0</span> Correctas</span>
+                <span style="color:red;"><i class="fas fa-times"></i> <span id="res-incorrect">0</span> Incorrectas</span>
+            </div>
+            <button onclick="location.href='index.html'" class="btn btn-primary">Volver al Menú</button>
         </div>
     </main>
+
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-triangle modal-icon"></i>
+            <h3 class="modal-title">¡Error Detectado!</h3>
+            <p id="error-text" class="modal-msg">Mensaje de error...</p>
+            <button class="btn btn-close-modal" onclick="document.getElementById('error-modal').style.display='none'">ENTENDIDO</button>
+        </div>
+    </div>
+
     <script src="JS/script-simulador.js" type="module"></script>
 </body>
-
 </html>
