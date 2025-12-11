@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador</title>
+    <link rel="stylesheet" href="CSS/style-main.css">
+    <link rel="stylesheet" href="CSS/style-simulador.css">
+    <script src="JS/auth.js"></script>
+    <script>checkAuth();</script>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="logo.png" class="logo-img">
+            <div class="logo-text">
+                <h1>SPARTA</h1><span id="header-title">SIMULADOR</span>
+            </div>
+        </a>
+    </header>
+    <main>
+        <div id="lobby" class="container-box">
+            <h2 id="lobby-title">Cargando...</h2>
+            <div id="instructions" class="instructions"></div>
+            <p><strong>Preguntas:</strong> <span id="total-questions">...</span> | <strong>Tiempo:</strong> <span
+                    id="time-limit">...</span> min</p>
+            <button id="btn-start" class="btn btn-primary" style="width:100%; margin-top:20px;"
+                disabled>Cargando...</button>
+        </div>
+        <div id="quiz" class="quiz-layout" style="display:none;">
+            <div class="quiz-main">
+                <div class="question-box">
+                    <span class="q-badge">Pregunta <span id="q-current">1</span></span>
+                    <p id="q-text">...</p>
+                    <div id="q-image-container"></div>
+                </div>
+                <div id="options-list"></div>
+                <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                    <button id="btn-prev" class="btn btn-outline"
+                        style="color:#333; border-color:#ccc;">Anterior</button>
+                    <button id="btn-next" class="btn btn-primary">Siguiente</button>
+                </div>
+            </div>
+            <div class="quiz-sidebar">
+                <div class="timer">⏱ <span id="timer">00:00</span></div>
+                <div id="nav-grid" class="nav-grid"></div>
+                <button id="btn-finish" class="btn btn-primary"
+                    style="width:100%; margin-top:20px; background:#27ae60;">Terminar</button>
+            </div>
+        </div>
+        <div id="results" class="container-box" style="display:none; text-align:center;">
+            <h2>Resultados</h2>
+            <div style="font-size:4rem; color:var(--primary); font-family:'Teko';"><span id="final-score">0</span> /
+                1000</div>
+            <p>Correctas: <span id="res-correct">0</span> | Incorrectas: <span id="res-incorrect">0</span></p>
+            <button onclick="location.href='index.html'" class="btn btn-primary" style="margin-top:20px;">Salir</button>
+        </div>
+    </main>
+    <script src="JS/script-simulador.js" type="module"></script>
+</body>
+
+</html>

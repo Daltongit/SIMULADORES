@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Sparta</title>
+    <link rel="stylesheet" href="CSS/style-main.css">
+    <link rel="stylesheet" href="CSS/style-home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="JS/auth.js"></script>
+    <script>checkAuth();</script>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="logo.png" class="logo-img">
+            <div class="logo-text">
+                <h1>SPARTA</h1><span>DASHBOARD</span>
+            </div>
+        </a>
+        <div class="user-menu">
+            <button class="btn btn-outline" id="user-btn"><i class="fas fa-user-circle"></i> <span
+                    id="user-name">User</span> ▼</button>
+            <div class="dropdown-content" id="user-dropdown">
+                <a href="resultados.html" id="admin-link" style="display:none;">Resultados Admin</a>
+                <a href="#" onclick="logout()">Cerrar Sesión</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="dashboard-wrapper">
+            <div class="nav-bar">
+                <div class="breadcrumbs" id="breadcrumbs"></div>
+            </div>
+            <div class="grid-container" id="grid-container"></div>
+        </div>
+    </main>
+    <footer>Sparta Academy &copy; 2025</footer>
+    <script src="JS/script-home.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', setupHeader);</script>
+</body>
+
+</html>

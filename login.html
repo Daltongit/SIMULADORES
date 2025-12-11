@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sparta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/style-main.css">
+    <link rel="stylesheet" href="CSS/style-login.css">
+</head>
+
+<body>
+    <div class="login-card">
+        <img src="logo_login.png" alt="Logo" width="120">
+        <h2>BIENVENIDO</h2>
+        <form id="login-form">
+            <input type="text" id="usuario" placeholder="Usuario" required class="input-field">
+            <input type="password" id="contrasena" placeholder="Contraseña" required class="input-field">
+            <button type="submit" class="btn btn-primary" style="width:100%">INGRESAR</button>
+        </form>
+        <div id="error-msg" style="color:red; margin-top:15px; display:none;"></div>
+    </div>
+    <script src="JS/script-login.js"></script>
+</body>
+
+</html>
