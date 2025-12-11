@@ -26,21 +26,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 const folder = modeParam === 'general_policia' ? 'POLICIA/GENERAL_POLICIA' : 'FFAA/ESMIL';
                 const files = ['sociales', 'matematicas', 'lengua', 'ingles'];
                 const suffix = modeParam === 'general_esmil' ? '_esmil.json' : '.json';
-
-                for (let base of files) {
+                
+                for(let base of files) {
                     const path = `DATA/${folder}/${base}${suffix}`;
                     const res = await fetch(path);
-                    if (res.ok) {
+                    if(res.ok) {
                         const data = await res.json();
                         questions = questions.concat(data.sort(() => 0.5 - Math.random()).slice(0, 50));
+                    } else {
+                        console.warn("Faltó cargar: " + path);
                     }
                 }
             } else {
-                if (fileParam.includes('matematicas')) timeLeft = 90 * 60;
+                if(fileParam.includes('matematicas')) timeLeft = 90 * 60;
+                
                 const res = await fetch(`DATA/${fileParam}`);
-                if (!res.ok) throw new Error(`Archivo no encontrado: DATA/${fileParam}`);
+                if(!res.ok) throw new Error(`Archivo no encontrado: DATA/${fileParam}`);
                 const data = await res.json();
-
+                
                 if (modeParam === 'ppnn') {
                     questions = data.sort(() => 0.5 - Math.random());
                 } else {
@@ -48,16 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            if(questions.length === 0) throw new Error("No hay preguntas cargadas. Revisa los archivos JSON en la carpeta DATA.");
+
             document.getElementById('total-questions').textContent = questions.length;
             document.getElementById('time-limit').textContent = Math.floor(timeLeft / 60);
-
+            
             const btn = document.getElementById('btn-start');
             btn.disabled = false;
             btn.textContent = "COMENZAR INTENTO";
             btn.onclick = startQuiz;
 
         } catch (e) {
-            alert("Error: " + e.message);
+            document.getElementById('lobby').innerHTML += `<div class="error-box">ERROR: ${e.message}</div>`;
+            document.getElementById('btn-start').textContent = "Error de Carga";
         }
     }
 
@@ -75,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = questions[idx];
         document.getElementById('q-current').textContent = idx + 1;
         document.getElementById('q-text').textContent = q.pregunta;
-
+        
         const imgCont = document.getElementById('q-image-container');
         imgCont.innerHTML = q.imagen ? `<img src="${q.imagen}">` : '';
 
@@ -101,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNav() {
         const grid = document.getElementById('nav-grid');
         grid.innerHTML = '';
-        for (let i = 0; i < questions.length; i++) {
+        for(let i=0; i<questions.length; i++) {
             const btn = document.createElement('button');
             btn.className = 'nav-dot';
             btn.textContent = i + 1;
@@ -111,17 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('btn-next').onclick = () => { if (currentIdx < questions.length - 1) showQuestion(currentIdx + 1); };
-    document.getElementById('btn-prev').onclick = () => { if (currentIdx > 0) showQuestion(currentIdx - 1); };
+    document.getElementById('btn-next').onclick = () => { if(currentIdx < questions.length - 1) showQuestion(currentIdx + 1); };
+    document.getElementById('btn-prev').onclick = () => { if(currentIdx > 0) showQuestion(currentIdx - 1); };
     document.getElementById('btn-finish').onclick = finishQuiz;
 
     function startTimer() {
         timerInterval = setInterval(() => {
             timeLeft--;
-            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-            const s = (timeLeft % 60).toString().padStart(2, '0');
+            const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+            const s = (timeLeft % 60).toString().padStart(2,'0');
             document.getElementById('timer').textContent = `${m}:${s}`;
-            if (timeLeft <= 0) finishQuiz();
+            if(timeLeft <= 0) finishQuiz();
         }, 1000);
     }
 
@@ -131,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('results').style.display = 'block';
 
         let correct = 0;
-        questions.forEach((q, i) => { if (userAnswers[i] === q.respuesta) correct++; });
+        questions.forEach((q, i) => { if(userAnswers[i] === q.respuesta) correct++; });
 
         const score = Math.round((correct / questions.length) * 1000);
         document.getElementById('final-score').textContent = score;
@@ -140,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // GUARDAR EN SUPABASE
         const user = JSON.parse(sessionStorage.getItem('sparta_user'));
-        if (user) {
-            await supabase.from('resultados').insert([{
+        if(user) {
+            const { error } = await supabase.from('resultados').insert([{
                 usuario_id: user.usuario,
                 usuario_nombre: user.nombre,
                 materia: titleParam,
@@ -149,6 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 total_preguntas: questions.length,
                 ciudad: user.ciudad
             }]);
+            
+            if(error) {
+                alert("Error al guardar en base de datos: " + error.message);
+            }
         }
     }
 
